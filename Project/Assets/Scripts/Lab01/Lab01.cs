@@ -4,6 +4,14 @@ using UnityEngine;
 
 public class Lab01 : MonoBehaviour
 {
+    public enum MoveDir
+    {
+        up = 1,
+        left = 2,
+        right = 3,
+        down = 4
+    }
+
     public class Grid2D
     {
         public Vector3 screenSize;
@@ -48,7 +56,38 @@ public class Lab01 : MonoBehaviour
         {
             isDrawingDivisions = !isDrawingDivisions;
         }
-
+        if (Input.GetKeyDown(KeyCode.UpArrow))
+        {
+            MoveOrigin(MoveDir.up);
+        }
+        if (Input.GetKeyDown(KeyCode.LeftArrow))
+        {
+            MoveOrigin(MoveDir.left);
+        }
+        if (Input.GetKeyDown(KeyCode.RightArrow))
+        {
+            MoveOrigin(MoveDir.right);
+        }
+        if (Input.GetKeyDown(KeyCode.DownArrow))
+        {
+            MoveOrigin(MoveDir.down);
+        }
+        if (Input.GetKeyDown(KeyCode.LeftBracket))
+        {
+            ScaleGridSize(MoveDir.down);
+        }
+        if (Input.GetKeyDown(KeyCode.RightBracket))
+        {
+            ScaleGridSize(MoveDir.up);
+        }
+        if (Input.GetKeyDown(KeyCode.Comma))
+        {
+            ScaleDivisionSize(MoveDir.down);
+        }
+        if (Input.GetKeyDown(KeyCode.Period))
+        {
+            ScaleDivisionSize(MoveDir.up);
+        }
 
         //(0,0)
         Vector3 gridOrigin = ScreenToGrid(grid.origin);
@@ -143,5 +182,52 @@ public class Lab01 : MonoBehaviour
         DrawLine(new Line(leftPoint, bottomPoint, originColor));
         DrawLine(new Line(bottomPoint, rightPoint, originColor));
         DrawLine(new Line(rightPoint,topPoint, originColor));
+    }
+
+    public void MoveOrigin(MoveDir dir)
+    {
+        switch (dir)
+        {
+            case MoveDir.up:
+                grid.origin = new Vector3(grid.origin.x, grid.origin.y + 5);
+                break;
+            case MoveDir.left:
+                grid.origin = new Vector3(grid.origin.x - 5, grid.origin.y);
+                break;
+            case MoveDir.right:
+                grid.origin = new Vector3(grid.origin.x + 5, grid.origin.y);
+                break;
+            case MoveDir.down:
+                grid.origin = new Vector3(grid.origin.x, grid.origin.y - 5);
+                break;
+        }
+    }
+
+    public void ScaleGridSize(MoveDir dir)
+    {
+        switch (dir)
+        {
+            case MoveDir.up:
+                grid.gridSize += 0.5f;
+                break;
+            case MoveDir.down:
+                grid.gridSize -= 0.5f;
+                if(grid.gridSize < grid.minGridSize) { grid.gridSize = grid.minGridSize; }
+                break;
+        }
+    }
+
+    public void ScaleDivisionSize(MoveDir dir)
+    {
+        switch (dir)
+        {
+            case MoveDir.up:
+                grid.divisionCount += 1;
+                break;
+            case MoveDir.down:
+                grid.divisionCount -= 1;
+                if(grid.divisionCount < grid.minDivisionCount) { grid.divisionCount = grid.minDivisionCount; }
+                break;
+        }
     }
 }
