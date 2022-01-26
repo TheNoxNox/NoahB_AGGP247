@@ -2,6 +2,26 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public class Grid2D
+{
+    public Vector3 screenSize;
+    public Vector3 origin;
+
+    public float gridSize = 10f;
+    public float minGridSize = 2f;
+    public float originSize = 20f;
+
+    public int divisionCount = 5;
+    public int minDivisionCount = 2;
+
+    public void DrawLine(Line line)
+    {
+        Line screenLine = new Line(Lab01.GridToScreen(line.start, this), Lab01.GridToScreen(line.end, this), line.color);
+
+        Glint.AddCommand(screenLine);
+    }
+}
+
 public class Lab01 : MonoBehaviour
 {
     public enum MoveDir
@@ -12,18 +32,7 @@ public class Lab01 : MonoBehaviour
         down = 4
     }
 
-    public class Grid2D
-    {
-        public Vector3 screenSize;
-        public Vector3 origin;
-
-        public float gridSize = 10f;
-        public float minGridSize = 2f;
-        public float originSize = 20f;
-
-        public int divisionCount = 5;
-        public int minDivisionCount = 2;
-    }
+    
 
     public Color axisColor = Color.white;
     public Color lineColor = Color.gray;
@@ -90,18 +99,19 @@ public class Lab01 : MonoBehaviour
         }
 
         //(0,0)
-        Vector3 gridOrigin = ScreenToGrid(grid.origin);
+        Vector3 gridOrigin = ScreenToGrid(grid.origin, grid);
 
         
-        float xStart = gridOrigin.x - grid.divisionCount * grid.gridSize;
-        float yStart = gridOrigin.y + grid.divisionCount * grid.gridSize;
+        float xStart = gridOrigin.x - (grid.divisionCount) * grid.gridSize;
+        float yStart = gridOrigin.y + (grid.divisionCount) * grid.gridSize;
 
-        //X Axis
-        for (int i = 0; i <= grid.divisionCount * grid.gridSize * 2; i++)
+        for (int i = 0; i <= grid.divisionCount * grid.gridSize; i++)
         {
             Color correctColor = lineColor;
 
-            float xPos = (xStart + i) * 2;
+            // X Axis
+
+            float xPos = xStart + (i * 2);
 
             if(xPos == gridOrigin.x && isDrawingAxis)
             {
@@ -116,14 +126,10 @@ public class Lab01 : MonoBehaviour
                 new Vector3(xPos, yStart),
                 new Vector3(xPos, gridOrigin.y - grid.divisionCount * grid.gridSize), 
                 correctColor));
-        }
 
-        //Y Axis
-        for(int i = 0; i <= grid.divisionCount * grid.gridSize * 2; i++)
-        {
-            Color correctColor = lineColor;
+            // Y Axis
 
-            float yPos = (yStart - i) * 2;
+            float yPos = yStart - (i * 2);
 
             if (yPos == gridOrigin.x && isDrawingAxis)
             {
@@ -148,7 +154,7 @@ public class Lab01 : MonoBehaviour
         //Debug.Log("Center of screen is at " + ScreenOrigin.x + ", " + ScreenOrigin.y);
     }
 
-    public Vector3 GridToScreen(Vector3 gridSpace)
+    public static Vector3 GridToScreen(Vector3 gridSpace, Grid2D grid)
     {
         float screenPosX = gridSpace.x * grid.gridSize + grid.origin.x;
         float screenPosY = gridSpace.y * grid.gridSize + grid.origin.y;
@@ -156,7 +162,7 @@ public class Lab01 : MonoBehaviour
         return new Vector3(screenPosX,screenPosY);
     }
 
-    public Vector3 ScreenToGrid(Vector3 screenSpace)
+    public static Vector3 ScreenToGrid(Vector3 screenSpace, Grid2D grid)
     {
         float gridPosX = (screenSpace.x - grid.origin.x) / grid.gridSize;
         float gridPosY = (screenSpace.y - grid.origin.y) / grid.gridSize;
@@ -166,7 +172,7 @@ public class Lab01 : MonoBehaviour
 
     public void DrawLine(Line line)
     {
-        Line screenLine = new Line(GridToScreen(line.start), GridToScreen(line.end), line.color);
+        Line screenLine = new Line(GridToScreen(line.start, grid), GridToScreen(line.end, grid), line.color);
 
         Glint.AddCommand(screenLine);        
     }
@@ -208,10 +214,10 @@ public class Lab01 : MonoBehaviour
         switch (dir)
         {
             case MoveDir.up:
-                grid.gridSize += 0.5f;
+                grid.gridSize += 1f;
                 break;
             case MoveDir.down:
-                grid.gridSize -= 0.5f;
+                grid.gridSize -= 1;
                 if(grid.gridSize < grid.minGridSize) { grid.gridSize = grid.minGridSize; }
                 break;
         }
