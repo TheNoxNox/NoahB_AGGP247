@@ -41,6 +41,9 @@ public class DrawingTools : MonoBehaviour
         float rotX = pointIN.x * Mathf.Cos(angle) - pointIN.y * Mathf.Sin(angle);
         float rotY = pointIN.x * Mathf.Sin(angle) + pointIN.y * Mathf.Cos(angle);
 
+        Debug.Log("X Prime: " + rotX);
+        Debug.Log("Y prime: " + rotY);
+
         pointOUT = new Vector3(Center.x + rotX, Center.y + rotY);
 
         return pointOUT;

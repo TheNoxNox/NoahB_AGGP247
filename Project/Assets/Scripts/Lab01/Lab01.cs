@@ -68,6 +68,7 @@ public class Lab01 : MonoBehaviour
     Diamond originDiamond = new Diamond();
     Diamond rotatingDiamond = new Diamond();
     ObjLetterE letterE = new ObjLetterE();
+    Hexagon hex = new Hexagon();
 
     private void Awake()
     {
@@ -80,6 +81,9 @@ public class Lab01 : MonoBehaviour
         rotatingDiamond.Initalize(gridOrigin + new Vector3(0, 7.5f, 0) / (grid.gridSize / 2), Vector3.one * grid.gridSize, Color.cyan);
 
         letterE.Initalize(gridOrigin + new Vector3(-30, 10, 0), Vector3.one * grid.gridSize, Color.green);
+
+        hex.Initalize(gridOrigin + new Vector3(10,-20,0), Vector3.one * grid.gridSize, Color.red);
+
     }
 
     private void Update()
@@ -184,10 +188,11 @@ public class Lab01 : MonoBehaviour
         }
 
         //Debug.Log("Center of screen is at " + ScreenOrigin.x + ", " + ScreenOrigin.y);
-        rotatingDiamond.Initalize(DrawingTools.RotatePoint(gridOrigin, .72f * Time.deltaTime, rotatingDiamond.Location),
-            Vector3.one * grid.gridSize, Color.cyan);
+        //rotatingDiamond.Initalize(DrawingTools.RotatePoint(gridOrigin, -.72f * Time.deltaTime, rotatingDiamond.Location),
+        //    Vector3.one * grid.gridSize, Color.cyan);
         grid.DrawObject(rotatingDiamond);
         grid.DrawObject(letterE);
+        grid.DrawObject(hex);
     }
 
     
