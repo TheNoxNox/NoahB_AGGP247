@@ -14,11 +14,30 @@ public class Grid2D
     public int divisionCount = 5;
     public int minDivisionCount = 2;
 
-    public void DrawLine(Line line)
+    public void DrawLine(Line line, bool DrawOnGrid = true)
     {
-        Line screenLine = new Line(Lab01.GridToScreen(line.start, this), Lab01.GridToScreen(line.end, this), line.color);
+        Vector3 lineStart;
+        Vector3 lineEnd;
+
+        if (DrawOnGrid)
+        {
+            lineStart = DrawingTools.GridToScreen(line.start, this);
+            lineEnd = DrawingTools.GridToScreen(line.end, this);
+        }
+        else
+        {
+            lineStart = line.start;
+            lineEnd = line.end;
+        }
+
+        Line screenLine = new Line(lineStart, lineEnd, line.color);
 
         Glint.AddCommand(screenLine);
+    }
+
+    public void DrawObject(DrawingObject lineObj, bool DrawOnGrid = true)
+    {
+        lineObj.Draw(this);
     }
 }
 
@@ -45,10 +64,23 @@ public class Lab01 : MonoBehaviour
 
     Grid2D grid = new Grid2D();
 
+    List<DrawingObject> drawObjects = new List<DrawingObject>();
+    DrawingObject diamond = new DrawingObject();
+
     private void Start()
     {
         grid.origin = new Vector3(Screen.width / 2, Screen.height / 2);
         grid.screenSize = new Vector3(Screen.width, Screen.height);
+
+        Vector3 gridOrigin = DrawingTools.ScreenToGrid(grid.origin, grid);
+        Vector3 topPoint = new Vector3(gridOrigin.x, gridOrigin.y + 0.2f) * grid.originSize;
+        Vector3 leftPoint = new Vector3(gridOrigin.x - 0.2f, gridOrigin.y) * grid.originSize;
+        Vector3 rightPoint = new Vector3(gridOrigin.x + 0.2f, gridOrigin.y) * grid.originSize;
+        Vector3 bottomPoint = new Vector3(gridOrigin.x, gridOrigin.y - 0.2f) * grid.originSize;
+        diamond.Lines.Add(new Line(topPoint, leftPoint, originColor));
+        diamond.Lines.Add(new Line(leftPoint, bottomPoint, originColor));
+        diamond.Lines.Add(new Line(bottomPoint, rightPoint, originColor));
+        diamond.Lines.Add(new Line(rightPoint, topPoint, originColor));
     }
 
     private void Update()
@@ -99,7 +131,7 @@ public class Lab01 : MonoBehaviour
         }
 
         //(0,0)
-        Vector3 gridOrigin = ScreenToGrid(grid.origin, grid);
+        Vector3 gridOrigin = DrawingTools.ScreenToGrid(grid.origin, grid);
 
         
         float xStart = gridOrigin.x - (grid.divisionCount) * grid.gridSize;
@@ -122,7 +154,7 @@ public class Lab01 : MonoBehaviour
                 correctColor = divisionColor;
             }
 
-            DrawLine(new Line(
+            grid.DrawLine(new Line(
                 new Vector3(xPos, yStart),
                 new Vector3(xPos, gridOrigin.y - grid.divisionCount * grid.gridSize), 
                 correctColor));
@@ -140,7 +172,7 @@ public class Lab01 : MonoBehaviour
                 correctColor = divisionColor;
             }
 
-            DrawLine(new Line(
+            grid.DrawLine(new Line(
                 new Vector3(xStart, yPos),
                 new Vector3(gridOrigin.x + grid.divisionCount * grid.gridSize, yPos),
                 correctColor));
@@ -148,31 +180,18 @@ public class Lab01 : MonoBehaviour
 
         if (isDrawingOrigin)
         {
-            DrawOrigin(gridOrigin);
+            //DrawOrigin(gridOrigin);
+            grid.DrawObject(diamond);
         }
 
         //Debug.Log("Center of screen is at " + ScreenOrigin.x + ", " + ScreenOrigin.y);
     }
 
-    public static Vector3 GridToScreen(Vector3 gridSpace, Grid2D grid)
-    {
-        float screenPosX = gridSpace.x * grid.gridSize + grid.origin.x;
-        float screenPosY = gridSpace.y * grid.gridSize + grid.origin.y;
-
-        return new Vector3(screenPosX,screenPosY);
-    }
-
-    public static Vector3 ScreenToGrid(Vector3 screenSpace, Grid2D grid)
-    {
-        float gridPosX = (screenSpace.x - grid.origin.x) / grid.gridSize;
-        float gridPosY = (screenSpace.y - grid.origin.y) / grid.gridSize;
-
-        return new Vector3(gridPosX, gridPosY);
-    }
+    
 
     public void DrawLine(Line line)
     {
-        Line screenLine = new Line(GridToScreen(line.start, grid), GridToScreen(line.end, grid), line.color);
+        Line screenLine = new Line(DrawingTools.GridToScreen(line.start, grid), DrawingTools.GridToScreen(line.end, grid), line.color);
 
         Glint.AddCommand(screenLine);        
     }
@@ -188,6 +207,9 @@ public class Lab01 : MonoBehaviour
         DrawLine(new Line(leftPoint, bottomPoint, originColor));
         DrawLine(new Line(bottomPoint, rightPoint, originColor));
         DrawLine(new Line(rightPoint,topPoint, originColor));
+
+        Debug.Log("drawing line from " + topPoint.ToString() + " to " + leftPoint.ToString());
+        Debug.Log("drawing line from " + leftPoint.ToString() + " to " + bottomPoint.ToString());
     }
 
     public void MoveOrigin(MoveDir dir)

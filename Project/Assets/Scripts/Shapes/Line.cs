@@ -17,11 +17,12 @@ public struct Line : ICommandInstruction
 	/// Draws the line instance, Is in screen space as default. Can pass a Grid2D to draw in the Grid Space.
 	/// </summary>
 	/// <param name="grid">Optional, Grid2D to draw relative to. (Start and End are in Grid Space when you do)</param>
-	public void Draw(Grid2D grid = null)
+	public void Draw(Grid2D grid = null, bool DrawOnGrid = true)
 	{
 		if (grid != null)
 		{
-			grid.DrawLine(this);
+			grid.DrawLine(this, DrawOnGrid);
+			//Debug.Log("Drawing Line From " + start.ToString() + " to " + end.ToString());
 			return;
 		}
 
