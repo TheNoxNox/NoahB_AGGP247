@@ -65,22 +65,21 @@ public class Lab01 : MonoBehaviour
     Grid2D grid = new Grid2D();
 
     List<DrawingObject> drawObjects = new List<DrawingObject>();
-    DrawingObject diamond = new DrawingObject();
+    Diamond originDiamond = new Diamond();
+    Diamond rotatingDiamond = new Diamond();
+    ObjLetterE letterE = new ObjLetterE();
 
-    private void Start()
+    private void Awake()
     {
         grid.origin = new Vector3(Screen.width / 2, Screen.height / 2);
         grid.screenSize = new Vector3(Screen.width, Screen.height);
 
-        Vector3 gridOrigin = DrawingTools.ScreenToGrid(grid.origin, grid);
-        Vector3 topPoint = new Vector3(gridOrigin.x, gridOrigin.y + 0.2f) * grid.originSize;
-        Vector3 leftPoint = new Vector3(gridOrigin.x - 0.2f, gridOrigin.y) * grid.originSize;
-        Vector3 rightPoint = new Vector3(gridOrigin.x + 0.2f, gridOrigin.y) * grid.originSize;
-        Vector3 bottomPoint = new Vector3(gridOrigin.x, gridOrigin.y - 0.2f) * grid.originSize;
-        diamond.Lines.Add(new Line(topPoint, leftPoint, originColor));
-        diamond.Lines.Add(new Line(leftPoint, bottomPoint, originColor));
-        diamond.Lines.Add(new Line(bottomPoint, rightPoint, originColor));
-        diamond.Lines.Add(new Line(rightPoint, topPoint, originColor));
+        Vector3 gridOrigin = DrawingTools.ScreenToGrid(grid.origin, grid) / grid.gridSize;
+        originDiamond.Initalize(gridOrigin, new Vector3(grid.originSize,grid.originSize,grid.originSize), originColor);
+
+        rotatingDiamond.Initalize(gridOrigin + new Vector3(0, 7.5f, 0) / (grid.gridSize / 2), Vector3.one * grid.gridSize, Color.cyan);
+
+        letterE.Initalize(gridOrigin + new Vector3(-30, 10, 0), Vector3.one * grid.gridSize, Color.green);
     }
 
     private void Update()
@@ -181,10 +180,14 @@ public class Lab01 : MonoBehaviour
         if (isDrawingOrigin)
         {
             //DrawOrigin(gridOrigin);
-            grid.DrawObject(diamond);
+            grid.DrawObject(originDiamond);
         }
 
         //Debug.Log("Center of screen is at " + ScreenOrigin.x + ", " + ScreenOrigin.y);
+        rotatingDiamond.Initalize(DrawingTools.RotatePoint(gridOrigin, .72f * Time.deltaTime, rotatingDiamond.Location),
+            Vector3.one * grid.gridSize, Color.cyan);
+        grid.DrawObject(rotatingDiamond);
+        grid.DrawObject(letterE);
     }
 
     

@@ -13,12 +13,12 @@ public class DrawingObject
 
     public void Start()
     {
-        Initalize();
+        //Initalize();
     }
 
-    public virtual void Initalize()
+    public virtual void Initalize(Vector3 origin, Vector3 scale, Color objectColor)
     {
-
+        
     }
 
     public virtual void Update()
