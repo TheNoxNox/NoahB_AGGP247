@@ -80,7 +80,7 @@ public class Lab01 : MonoBehaviour
 
         rotatingDiamond.Initalize(gridOrigin + new Vector3(0, 7.5f, 0) / (grid.gridSize / 2), Vector3.one * grid.gridSize, Color.cyan);
 
-        letterE.Initalize(gridOrigin + new Vector3(-30, 10, 0), Vector3.one * grid.gridSize, Color.green);
+        letterE.Initalize(gridOrigin + new Vector3(-30, 10, 0), Vector3.one * grid.gridSize, Color.red);
 
         hex.Initalize(gridOrigin + new Vector3(10,-20,0), Vector3.one * grid.gridSize, Color.red);
 
@@ -88,31 +88,31 @@ public class Lab01 : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Alpha1))
+        if (Input.GetKey(KeyCode.Alpha1))
         {
             isDrawingOrigin = !isDrawingOrigin;
         }
-        if (Input.GetKeyDown(KeyCode.Alpha2))
+        if (Input.GetKey(KeyCode.Alpha2))
         {
             isDrawingAxis = !isDrawingAxis;
         }
-        if (Input.GetKeyDown(KeyCode.Alpha3))
+        if (Input.GetKey(KeyCode.Alpha3))
         {
             isDrawingDivisions = !isDrawingDivisions;
         }
-        if (Input.GetKeyDown(KeyCode.UpArrow))
+        if (Input.GetKey(KeyCode.UpArrow))
         {
             MoveOrigin(MoveDir.up);
         }
-        if (Input.GetKeyDown(KeyCode.LeftArrow))
+        if (Input.GetKey(KeyCode.LeftArrow))
         {
             MoveOrigin(MoveDir.left);
         }
-        if (Input.GetKeyDown(KeyCode.RightArrow))
+        if (Input.GetKey(KeyCode.RightArrow))
         {
             MoveOrigin(MoveDir.right);
         }
-        if (Input.GetKeyDown(KeyCode.DownArrow))
+        if (Input.GetKey(KeyCode.DownArrow))
         {
             MoveOrigin(MoveDir.down);
         }
@@ -188,8 +188,8 @@ public class Lab01 : MonoBehaviour
         }
 
         //Debug.Log("Center of screen is at " + ScreenOrigin.x + ", " + ScreenOrigin.y);
-        //rotatingDiamond.Initalize(DrawingTools.RotatePoint(gridOrigin, -.72f * Time.deltaTime, rotatingDiamond.Location),
-        //    Vector3.one * grid.gridSize, Color.cyan);
+        rotatingDiamond.Initalize(DrawingTools.RotatePoint(gridOrigin, -72f * Time.deltaTime, rotatingDiamond.Location),
+            Vector3.one * grid.gridSize, Color.cyan);
         grid.DrawObject(rotatingDiamond);
         grid.DrawObject(letterE);
         grid.DrawObject(hex);
@@ -225,16 +225,16 @@ public class Lab01 : MonoBehaviour
         switch (dir)
         {
             case MoveDir.up:
-                grid.origin = new Vector3(grid.origin.x, grid.origin.y + 5);
+                grid.origin = new Vector3(grid.origin.x, grid.origin.y + 5 * 0.08f);
                 break;
             case MoveDir.left:
-                grid.origin = new Vector3(grid.origin.x - 5, grid.origin.y);
+                grid.origin = new Vector3(grid.origin.x - 5 * 0.08f, grid.origin.y);
                 break;
             case MoveDir.right:
-                grid.origin = new Vector3(grid.origin.x + 5, grid.origin.y);
+                grid.origin = new Vector3(grid.origin.x + 5 * 0.08f, grid.origin.y);
                 break;
             case MoveDir.down:
-                grid.origin = new Vector3(grid.origin.x, grid.origin.y - 5);
+                grid.origin = new Vector3(grid.origin.x, grid.origin.y - 5 * 0.08f);
                 break;
         }
     }
@@ -247,7 +247,7 @@ public class Lab01 : MonoBehaviour
                 grid.gridSize += 1f;
                 break;
             case MoveDir.down:
-                grid.gridSize -= 1;
+                grid.gridSize -= 1f;
                 if(grid.gridSize < grid.minGridSize) { grid.gridSize = grid.minGridSize; }
                 break;
         }

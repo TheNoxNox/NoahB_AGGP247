@@ -38,11 +38,13 @@ public class DrawingTools : MonoBehaviour
     {
         Vector3 pointOUT;
 
-        float rotX = pointIN.x * Mathf.Cos(angle) - pointIN.y * Mathf.Sin(angle);
-        float rotY = pointIN.x * Mathf.Sin(angle) + pointIN.y * Mathf.Cos(angle);
+        float radAngl = Mathf.Deg2Rad * angle;
 
-        Debug.Log("X Prime: " + rotX);
-        Debug.Log("Y prime: " + rotY);
+        float rotX = pointIN.x * Mathf.Cos(radAngl) - pointIN.y * Mathf.Sin(radAngl);
+        float rotY = pointIN.x * Mathf.Sin(radAngl) + pointIN.y * Mathf.Cos(radAngl);
+
+        //Debug.Log("X Prime: " + rotX);
+        //Debug.Log("Y prime: " + rotY);
 
         pointOUT = new Vector3(Center.x + rotX, Center.y + rotY);
 
