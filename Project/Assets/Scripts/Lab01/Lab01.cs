@@ -137,8 +137,8 @@ public class Lab01 : MonoBehaviour
         Vector3 gridOrigin = DrawingTools.ScreenToGrid(grid.origin, grid);
 
         
-        float xStart = gridOrigin.x - (grid.divisionCount) * grid.gridSize;
-        float yStart = gridOrigin.y + (grid.divisionCount) * grid.gridSize;
+        float xStart = gridOrigin.x - (grid.divisionCount * grid.gridSize);
+        float yStart = gridOrigin.y + (grid.divisionCount * grid.gridSize);
 
         for (int i = 0; i <= grid.divisionCount * grid.gridSize; i++)
         {
@@ -180,6 +180,11 @@ public class Lab01 : MonoBehaviour
                 new Vector3(gridOrigin.x + grid.divisionCount * grid.gridSize, yPos),
                 correctColor));
         }
+
+        Parabola1(xStart);
+        Parabola2(xStart);
+        Parabola3(xStart);
+        Parabola4(yStart);
 
         if (isDrawingOrigin)
         {
@@ -264,6 +269,82 @@ public class Lab01 : MonoBehaviour
                 grid.divisionCount -= 1;
                 if(grid.divisionCount < grid.minDivisionCount) { grid.divisionCount = grid.minDivisionCount; }
                 break;
+        }
+    }
+
+    public void Parabola1(float gridLeftEdge)
+    {
+        Vector3 prevPoint = new Vector3(gridLeftEdge, Mathf.Pow(gridLeftEdge, 2));
+
+        for (int i = 1; i <= grid.divisionCount * grid.gridSize; i++)
+        {
+            float xPos = gridLeftEdge + (i * 2);
+
+            float yPos = Mathf.Pow(xPos, 2);
+
+            Vector3 newPoint = new Vector3(xPos, yPos);
+
+            grid.DrawLine(new Line(prevPoint, newPoint, Color.cyan));
+
+            prevPoint = newPoint;
+        }
+    }
+
+    public void Parabola2(float gridLeftEdge)
+    {
+        Vector3 prevPoint = new Vector3(gridLeftEdge, Mathf.Pow(gridLeftEdge, 2) + (gridLeftEdge * 2) + 1);
+
+        for (int i = 1; i <= grid.divisionCount * grid.gridSize; i++)
+        {
+            float xPos = gridLeftEdge + (i * 2);
+
+            float yPos = Mathf.Pow(xPos, 2) + (xPos * 2) + 1;
+
+            Vector3 newPoint = new Vector3(xPos, yPos);
+
+            grid.DrawLine(new Line(prevPoint, newPoint, Color.blue));
+
+            prevPoint = newPoint;
+        }
+    }
+
+    public void Parabola3(float gridLeftEdge)
+    {
+        Vector3 prevPoint = new Vector3(gridLeftEdge, (-2 * Mathf.Pow(gridLeftEdge, 2)) + (10 * gridLeftEdge) + 12);
+
+        for (int i = 1; i <= grid.divisionCount * grid.gridSize; i++)
+        {
+            float xPos = gridLeftEdge + (i * 2);
+
+            float yPos = (-2 * Mathf.Pow(xPos,2)) + (10 * xPos) + 12;
+
+            Vector3 newPoint = new Vector3(xPos, yPos);
+
+            grid.DrawLine(new Line(prevPoint, newPoint, Color.green));
+
+            prevPoint = newPoint;
+        }
+    }
+
+    public void Parabola4(float gridTopEdge)
+    {
+        Vector3 prevPoint = new Vector3(Mathf.Pow(-gridTopEdge,3), gridTopEdge);
+
+        for (int i = 1; i <= grid.divisionCount * grid.gridSize; i++)
+        {
+            float yPos = gridTopEdge - (i * 2);
+
+            Debug.Log("Ypos = " + yPos);
+
+            float xPos = Mathf.Pow(-yPos, 3);
+
+            Debug.Log("Xpos = " + xPos);
+
+            Vector3 newPoint = new Vector3(xPos, yPos);
+
+            grid.DrawLine(new Line(prevPoint, newPoint, Color.magenta));
+
+            prevPoint = newPoint;
         }
     }
 }

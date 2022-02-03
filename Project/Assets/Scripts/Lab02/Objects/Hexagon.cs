@@ -13,7 +13,7 @@ public class Hexagon : DrawingObject
 
         Vector3 point1, point2, point3, point4, point5, point6;
 
-        point1 = Location + new Vector3(-5, 0, 0);
+        point1 = Location + new Vector3(-1, 0, 0);
         point2 = DrawingTools.RotatePoint(Location, 60f, point1);
         point3 = DrawingTools.RotatePoint(Location, 60f, point2);
         point4 = DrawingTools.RotatePoint(Location, 60f, point3);
