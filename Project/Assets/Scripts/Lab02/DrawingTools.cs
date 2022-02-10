@@ -50,4 +50,119 @@ public class DrawingTools : MonoBehaviour
 
         return pointOUT;
     }
+
+    public static float ToDegrees(float radian)
+    {
+        return radian * Mathf.Rad2Deg;
+    }
+
+    public static float ToRadians(float degree)
+    {
+        return degree * Mathf.Deg2Rad;
+    }
+
+    public static Vector3 CircleRadiusPoint(Vector3 origin, float angle, float radius)
+    {
+        return new Vector3(origin.x + radius * Mathf.Cos(ToRadians(angle)), origin.y + radius * Mathf.Sin(ToRadians(angle)));
+    }
+
+    /// <summary>
+    /// Draws a circle independantly of any grid. As such, coordinates and radius should be screenspace.
+    /// </summary>
+    /// <param name="pos">Coordinates in screen space</param>
+    /// <param name="radius">In screenspace units.</param>
+    /// <param name="sides">Anything below 3 will be truncated and replaced with 3.</param>
+    /// <param name="color"></param>
+    public static void DrawCircle(Vector3 pos, float radius, int sides, Color color)
+    {
+        int adjustedSides;
+        if(sides > 3) { adjustedSides = sides; }
+        else { adjustedSides = 3; }
+
+        float incrementAngle = 360f / adjustedSides;
+
+        Vector3 lastPoint = CircleRadiusPoint(pos, 0, radius);
+
+        for (int i = 1; i <= sides; i++)
+        {
+            Vector3 nextPoint = CircleRadiusPoint(pos, incrementAngle * i, radius);
+
+            Line circleSide = new Line(lastPoint, nextPoint, color);
+
+            Glint.AddCommand(circleSide);
+
+            lastPoint = nextPoint;
+        }
+    }
+
+    public static Vector3 EllipseRadiusPoint(Vector3 origin, float angle, Vector3 axis)
+    {
+        return new Vector3(
+            origin.x + axis.x * Mathf.Cos(ToRadians(angle)),
+            origin.y + axis.y * Mathf.Sin(ToRadians(angle)));
+    }
+
+    public static void DrawEllipse(Vector3 pos, Vector3 axis, int sides, Color color)
+    {
+        int adjustedSides;
+        if (sides > 3) { adjustedSides = sides; }
+        else { adjustedSides = 3; }
+
+        float incrementAngle = 360f / adjustedSides;
+
+        Vector3 lastPoint = EllipseRadiusPoint(pos, 0, axis);
+
+        for (int i = 1; i <= sides; i++)
+        {
+            Vector3 nextPoint = EllipseRadiusPoint(pos,incrementAngle * i, axis);
+
+            Line circleSide = new Line(lastPoint, nextPoint, color);
+
+            Glint.AddCommand(circleSide);
+
+            lastPoint = nextPoint;
+        }
+    }
+}
+
+public class Ellipse
+{
+    /// <summary>
+    /// The center point IN SCREEN SPACE UNITS of the ellipse. Make sure to convert!
+    /// </summary>
+    public Vector3 center = Vector3.zero;
+    public Vector3 axis = Vector3.one;
+    public float rotation = 0;
+    public int sides = 32;
+    public float width = 2.0f;
+    public Color color = Color.white;
+
+    public Ellipse() { }
+
+    public Ellipse(Vector3 cent, Vector3 ax, float rot, int side, float wid, Color col)
+    {
+        center = cent;
+        axis = ax;
+        rotation = rot;
+        sides = side;
+        width = wid;
+        color = col;
+    }
+
+    public virtual void Draw()
+    {
+        DrawingTools.DrawEllipse(center, axis, sides, color);
+    }
+
+    // I did not include an overload for drawing with a Grid2D as it isn't needed given how I've set up my DrawEllipse function.
+}
+
+public class Circle : Ellipse
+{
+    public float Radius { get { return axis.x; } set { axis = new Vector3(value, value); } }
+
+    public override void Draw()
+    {
+        DrawingTools.DrawCircle(center, Radius, sides, color);
+    }
 }

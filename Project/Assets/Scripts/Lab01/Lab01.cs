@@ -14,6 +14,8 @@ public class Grid2D
     public int divisionCount = 5;
     public int minDivisionCount = 2;
 
+    public Vector3 originGridSpace { get { return DrawingTools.ScreenToGrid(origin, this); } }
+
     public void DrawLine(Line line, bool DrawOnGrid = true)
     {
         Vector3 lineStart;
@@ -61,8 +63,12 @@ public class Lab01 : MonoBehaviour
     public bool isDrawingOrigin = false;
     public bool isDrawingAxis = true;
     public bool isDrawingDivisions = true;
+    public bool isDrawGroupCircle = true;
 
     Grid2D grid = new Grid2D();
+
+    Ellipse myEllipse = new Ellipse();
+    Circle myCircle = new Circle();
 
     List<DrawingObject> drawObjects = new List<DrawingObject>();
     Diamond originDiamond = new Diamond();
@@ -84,19 +90,26 @@ public class Lab01 : MonoBehaviour
 
         hex.Initalize(gridOrigin + new Vector3(10,-20,0), Vector3.one * grid.gridSize, Color.red);
 
+        myEllipse.center = grid.origin;
+        myEllipse.axis = new Vector3(85, 20);
+        myEllipse.color = Color.red;
+
+        myCircle.Radius = 130f;
+        myCircle.sides = 16;
+        myCircle.center = grid.origin;
     }
 
     private void Update()
     {
-        if (Input.GetKey(KeyCode.Alpha1))
+        if (Input.GetKeyDown(KeyCode.Alpha1))
         {
             isDrawingOrigin = !isDrawingOrigin;
         }
-        if (Input.GetKey(KeyCode.Alpha2))
+        if (Input.GetKeyDown(KeyCode.Alpha2))
         {
             isDrawingAxis = !isDrawingAxis;
         }
-        if (Input.GetKey(KeyCode.Alpha3))
+        if (Input.GetKeyDown(KeyCode.Alpha3))
         {
             isDrawingDivisions = !isDrawingDivisions;
         }
@@ -131,6 +144,10 @@ public class Lab01 : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Period))
         {
             ScaleDivisionSize(MoveDir.up);
+        }
+        if (Input.GetKeyDown(KeyCode.Tab))
+        {
+            isDrawGroupCircle = !isDrawGroupCircle;
         }
 
         //(0,0)
@@ -198,6 +215,20 @@ public class Lab01 : MonoBehaviour
         grid.DrawObject(rotatingDiamond);
         grid.DrawObject(letterE);
         grid.DrawObject(hex);
+
+        if (isDrawGroupCircle)
+        {
+            DrawingTools.DrawCircle(DrawingTools.GridToScreen(grid.originGridSpace + new Vector3(-5, -10), grid),
+            50, 20, Color.magenta);
+            myCircle.Draw();
+        }
+        else
+        {
+            DrawingTools.DrawEllipse(DrawingTools.GridToScreen(grid.originGridSpace + new Vector3(-20, -25), grid),
+                new Vector3(75, 135), 12, Color.green);
+            myEllipse.Draw();
+        }
+        
     }
 
     
@@ -230,16 +261,16 @@ public class Lab01 : MonoBehaviour
         switch (dir)
         {
             case MoveDir.up:
-                grid.origin = new Vector3(grid.origin.x, grid.origin.y + 5 * 0.08f);
+                grid.origin = new Vector3(grid.origin.x, grid.origin.y + 5 * 0.2f);
                 break;
             case MoveDir.left:
-                grid.origin = new Vector3(grid.origin.x - 5 * 0.08f, grid.origin.y);
+                grid.origin = new Vector3(grid.origin.x - 5 * 0.2f, grid.origin.y);
                 break;
             case MoveDir.right:
-                grid.origin = new Vector3(grid.origin.x + 5 * 0.08f, grid.origin.y);
+                grid.origin = new Vector3(grid.origin.x + 5 * 0.2f, grid.origin.y);
                 break;
             case MoveDir.down:
-                grid.origin = new Vector3(grid.origin.x, grid.origin.y - 5 * 0.08f);
+                grid.origin = new Vector3(grid.origin.x, grid.origin.y - 5 * 0.2f);
                 break;
         }
     }
@@ -249,10 +280,10 @@ public class Lab01 : MonoBehaviour
         switch (dir)
         {
             case MoveDir.up:
-                grid.gridSize += 1f;
+                grid.gridSize += 2f;
                 break;
             case MoveDir.down:
-                grid.gridSize -= 1f;
+                grid.gridSize -= 2f;
                 if(grid.gridSize < grid.minGridSize) { grid.gridSize = grid.minGridSize; }
                 break;
         }
@@ -276,9 +307,9 @@ public class Lab01 : MonoBehaviour
     {
         Vector3 prevPoint = new Vector3(gridLeftEdge, Mathf.Pow(gridLeftEdge, 2));
 
-        for (int i = 1; i <= grid.divisionCount * grid.gridSize; i++)
+        for (int i = 1; i <= grid.divisionCount * grid.gridSize * 2; i++)
         {
-            float xPos = gridLeftEdge + (i * 2);
+            float xPos = gridLeftEdge + (i);
 
             float yPos = Mathf.Pow(xPos, 2);
 
@@ -294,9 +325,9 @@ public class Lab01 : MonoBehaviour
     {
         Vector3 prevPoint = new Vector3(gridLeftEdge, Mathf.Pow(gridLeftEdge, 2) + (gridLeftEdge * 2) + 1);
 
-        for (int i = 1; i <= grid.divisionCount * grid.gridSize; i++)
+        for (int i = 1; i <= grid.divisionCount * grid.gridSize * 2; i++)
         {
-            float xPos = gridLeftEdge + (i * 2);
+            float xPos = gridLeftEdge + (i);
 
             float yPos = Mathf.Pow(xPos, 2) + (xPos * 2) + 1;
 
@@ -312,9 +343,9 @@ public class Lab01 : MonoBehaviour
     {
         Vector3 prevPoint = new Vector3(gridLeftEdge, (-2 * Mathf.Pow(gridLeftEdge, 2)) + (10 * gridLeftEdge) + 12);
 
-        for (int i = 1; i <= grid.divisionCount * grid.gridSize; i++)
+        for (int i = 1; i <= grid.divisionCount * grid.gridSize * 2; i++)
         {
-            float xPos = gridLeftEdge + (i * 2);
+            float xPos = gridLeftEdge + (i);
 
             float yPos = (-2 * Mathf.Pow(xPos,2)) + (10 * xPos) + 12;
 
@@ -330,9 +361,9 @@ public class Lab01 : MonoBehaviour
     {
         Vector3 prevPoint = new Vector3(Mathf.Pow(-gridTopEdge,3), gridTopEdge);
 
-        for (int i = 1; i <= grid.divisionCount * grid.gridSize; i++)
+        for (int i = 1; i <= grid.divisionCount * grid.gridSize * 2; i++)
         {
-            float yPos = gridTopEdge - (i * 2);
+            float yPos = gridTopEdge - (i);
 
             Debug.Log("Ypos = " + yPos);
 
