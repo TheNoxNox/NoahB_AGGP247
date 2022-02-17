@@ -6,6 +6,7 @@ public class ObjLetterE : DrawingObject
 {
     public override void Initalize(Vector3 origin, Vector3 scale, Color objectColor)
     {
+        base.Initalize(origin,scale,objectColor);
         Location = origin;
         Scale = scale;
 

@@ -6,6 +6,7 @@ public class Grid2D
 {
     public Vector3 screenSize;
     public Vector3 origin;
+    public Vector3 gridSpaceOrigin { get { return DrawingTools.ScreenToGrid(origin, this); } }
 
     public float gridSize = 10f;
     public float minGridSize = 2f;
@@ -365,11 +366,7 @@ public class Lab01 : MonoBehaviour
         {
             float yPos = gridTopEdge - (i);
 
-            Debug.Log("Ypos = " + yPos);
-
             float xPos = Mathf.Pow(-yPos, 3);
-
-            Debug.Log("Xpos = " + xPos);
 
             Vector3 newPoint = new Vector3(xPos, yPos);
 

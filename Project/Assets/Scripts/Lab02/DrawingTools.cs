@@ -40,8 +40,8 @@ public class DrawingTools : MonoBehaviour
 
         float radAngl = Mathf.Deg2Rad * angle;
 
-        float rotX = pointIN.x * Mathf.Cos(radAngl) - pointIN.y * Mathf.Sin(radAngl);
-        float rotY = pointIN.x * Mathf.Sin(radAngl) + pointIN.y * Mathf.Cos(radAngl);
+        float rotX = (pointIN.x - Center.x) * Mathf.Cos(radAngl) - (pointIN.y - Center.y) * Mathf.Sin(radAngl);
+        float rotY = (pointIN.x - Center.x) * Mathf.Sin(radAngl) + (pointIN.y - Center.y) * Mathf.Cos(radAngl);
 
         //Debug.Log("X Prime: " + rotX);
         //Debug.Log("Y prime: " + rotY);
@@ -122,6 +122,35 @@ public class DrawingTools : MonoBehaviour
 
             lastPoint = nextPoint;
         }
+    }
+
+    /// <summary>
+    /// both MUST be in either gridspace or screenspace coordinates.
+    /// </summary>
+    /// <param name="point">E</param>
+    /// <param name="triangle"></param>
+    /// <returns></returns>
+    public static bool PointInsideTriangle(Vector3 point, TriangleDrawObj triangle)
+    {
+        // https://blackpawn.com/texts/pointinpoly/
+
+        Vector3 v0 = triangle.PointC - triangle.PointA;
+        Vector3 v1 = triangle.PointB - triangle.PointA;
+        Vector3 v2 = point - triangle.PointA;
+
+        float dot00 = Vector3.Dot(v0, v0);
+        float dot01 = Vector3.Dot(v0, v1);
+        float dot02 = Vector3.Dot(v0, v2);
+        float dot11 = Vector3.Dot(v1, v1);
+        float dot12 = Vector3.Dot(v1, v2);
+
+        float invDenom = 1 / (dot00 * dot11 - dot01 * dot01);
+        float u = (dot11 * dot02 - dot01 * dot12) * invDenom;
+        float v = (dot00 * dot12 - dot01 * dot02) * invDenom;
+
+        if (u >= 0 && v >= 0 && u + v < 1) { return true; }
+
+        return false;
     }
 }
 

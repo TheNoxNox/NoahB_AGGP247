@@ -9,7 +9,7 @@ public class Hexagon : DrawingObject
         Location = origin;
         Scale = scale;
 
-        Debug.Log(Location.ToString());
+        //Debug.Log(Location.ToString());
 
         Vector3 point1, point2, point3, point4, point5, point6;
 

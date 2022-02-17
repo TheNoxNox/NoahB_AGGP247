@@ -5,7 +5,7 @@ using Drawing.Glint;
 
 public class DrawingObject
 {
-    public bool PerformDraw = true;
+    public bool PerformDraw = false;
     public float Roation = 0;
     public Vector3 Scale = Vector3.zero;
     public Vector3 Location = Vector3.zero;
@@ -18,16 +18,16 @@ public class DrawingObject
 
     public virtual void Initalize(Vector3 origin, Vector3 scale, Color objectColor)
     {
-        
+        Lines.Clear();
     }
 
     public virtual void Update()
     {
 
-        //if (PerformDraw)
-        //{
-        //    Draw();
-        //}
+        if (PerformDraw)
+        {
+            Draw();
+        }
     }
 
     /// <summary>
