@@ -109,9 +109,39 @@ public class CollisionExample : MonoBehaviour
             Vector3 PointB_Sc = DrawingTools.GridToScreen(triangle.PointB, grid);
             Vector3 PointC_Sc = DrawingTools.GridToScreen(triangle.PointC, grid);
 
-            for(int i = (int)PointB_Sc.y; i >= (int)PointC_Sc.y; i--)
-            {
+            if (PointB_Sc.y < PointA_Sc.y) { Vector3 temp = PointB_Sc; PointB_Sc = PointA_Sc; PointA_Sc = temp; }
+            if (PointC_Sc.y < PointA_Sc.y) { Vector3 temp = PointC_Sc; PointC_Sc = PointA_Sc; PointA_Sc = temp; }
+            if (PointC_Sc.y < PointB_Sc.y) { Vector3 temp = PointC_Sc; PointC_Sc = PointB_Sc; PointB_Sc = temp; }
 
+            List<float> x01 = DrawingTools.Interpolate(PointA_Sc.y, PointA_Sc.x, PointB_Sc.y, PointB_Sc.x);
+            List<float> x12 = DrawingTools.Interpolate(PointB_Sc.y, PointB_Sc.x, PointC_Sc.y, PointC_Sc.x);
+            List<float> x02 = DrawingTools.Interpolate(PointA_Sc.y, PointA_Sc.x, PointC_Sc.y, PointC_Sc.x);
+
+            x01.RemoveAt(x01.Count - 1);
+            x01.AddRange(x12);
+            List<float> x012 = x01;
+
+            List<float> x_left;
+            List<float> x_right;
+
+            int m = (int)Mathf.Floor(x012.Count / 2);
+            if (x02[m] < x012[m])
+            {
+                x_left = x02;
+                x_right = x012;
+            }
+            else
+            {
+                x_left = x012;
+                x_right = x02;
+            }
+
+            for (float y = PointA_Sc.y; y < PointC_Sc.y - 1; y += 1)
+            {
+                Glint.AddCommand(new Line(
+                    new Vector3(x_left[(int)(y - PointA_Sc.y)], y), 
+                    new Vector3(x_right[(int)(y - PointA_Sc.y)], y), 
+                    Color.blue));
             }
         }
 

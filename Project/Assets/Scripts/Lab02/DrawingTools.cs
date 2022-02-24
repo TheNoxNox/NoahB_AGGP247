@@ -152,6 +152,29 @@ public class DrawingTools : MonoBehaviour
 
         return false;
     }
+
+    //https://gabrielgambetta.com/computer-graphics-from-scratch/06-lines.html
+    public static List<float> Interpolate(float i0, float d0, float i1, float d1)
+    {
+        List<float> values = new List<float>();
+
+        if(i1 == i0)
+        {
+            values.Add(d0);
+            return values;
+        }
+
+        float a = (d1 - d0) / (i1 - i0);
+        float d = d0;
+
+        for(float i = i0; i < i1; i += 1)
+        {
+            values.Add(d);
+            d += a;
+        }
+
+        return values;
+    }
 }
 
 public class Ellipse
