@@ -1,0 +1,4 @@
+A version of the "asteroid-spacewar hybrid" game suggested by the lab document. Game will have three different maps to choose
+from, each with their own array of gravity points and obstacle-spawns. Destroying obstacles gives power-ups depending on color/shape.
+
+Players have a set amount of lives and die in one hit.
