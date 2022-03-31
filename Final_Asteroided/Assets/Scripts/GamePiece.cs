@@ -28,10 +28,55 @@ public class GamePiece : MonoBehaviour
 
     public List<GravitySource> externalForces = new List<GravitySource>();
 
-    private void Awake()
+    protected virtual void Awake()
     {
         //location = GameManager.Main.screenCenter;
         GameManager.Main.gamePieces.Add(this);
+    }
+
+    protected virtual void Update()
+    {
+        force = Vector3.zero;
+
+        foreach (GravitySource source in externalForces)
+        {
+
+            float angleToSourceY = Mathf.Atan((location.y - source.location.y) / (location.x - source.location.x));
+            float angleToSourceX = Mathf.Acos((location.x - source.location.x) /
+                Mathf.Sqrt(Mathf.Pow(location.y - source.location.y, 2) + Mathf.Pow(location.x - source.location.x, 2)));
+
+            float forceToApplyY = (source.gravityStrength * -Mathf.Sin(angleToSourceY)) /
+                Mathf.Sqrt(Mathf.Pow(location.y - source.location.y, 2) + Mathf.Pow(location.x - source.location.x, 2));
+            float forceToApplyX = (source.gravityStrength * -Mathf.Cos(angleToSourceX)) /
+                Mathf.Sqrt(Mathf.Pow(location.y - source.location.y, 2) + Mathf.Pow(location.x - source.location.x, 2));
+
+            if (location.x < source.location.x)
+            {
+                forceToApplyY *= -1;
+            }
+
+            this.force.y += forceToApplyY;
+            this.force.x += forceToApplyX;
+
+            
+        }
+
+        this.acceleration = force / mass;
+
+        if (Mathf.Abs(velocity.magnitude) < maxVelocity * Time.deltaTime)
+        {
+            this.velocity += acceleration * Time.deltaTime;
+        }
+
+        this.location += velocity;
+
+        if (location.x < 0) { location = new Vector3(Screen.width, location.y); }
+        else if (location.x > Screen.width) { location = new Vector3(0, location.y); }
+
+        if (location.y < 0) { location = new Vector3(location.x, Screen.height); }
+        else if (location.y > Screen.height) { location = new Vector3(location.x, 0); }
+
+        externalForces.Clear();
     }
 
     // https://gamedevelopment.tutsplus.com/tutorials/when-worlds-collide-simulating-circle-circle-collisions--gamedev-769

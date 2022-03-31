@@ -15,7 +15,7 @@ public class GravitySource : GamePiece
     }
 
     // Update is called once per frame
-    void Update()
+    protected override void Update()
     {
         DrawingTools.DrawCircle(location, gravityRadius, 16, pieceColor);
 
@@ -29,9 +29,10 @@ public class GravitySource : GamePiece
                             && location.y < otherPiece.location.y + gravityRadius + otherPiece.hitboxSize)
                 {
                     //Is colliding with other piece
-                    Debug.Log("Adding grav force to " + otherPiece.gameObject.name);
+                    
                     if (!otherPiece.externalForces.Contains(this))
                     {
+                        Debug.Log("Adding grav force to " + otherPiece.gameObject.name);
                         otherPiece.externalForces.Add(this);
                     }
 
