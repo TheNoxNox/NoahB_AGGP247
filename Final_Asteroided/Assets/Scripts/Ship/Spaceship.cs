@@ -8,6 +8,7 @@ public class Spaceship : GamePiece
 
     Vector3 nose, tailLeft, tailRight, tailCenter;
 
+    public int score = 0;
 
     public int playerNum;
 
@@ -40,17 +41,18 @@ public class Spaceship : GamePiece
         
         if (inputs.Contains(KeyCode.W))
         {
-            force.y = speed * Mathf.Sin(rotation * Mathf.Deg2Rad); 
+            force.y = speed * Mathf.Sin(rotation * Mathf.Deg2Rad);
             force.x = speed * Mathf.Cos(rotation * Mathf.Deg2Rad);
         }
         else if (inputs.Contains(KeyCode.S))
         {
             velocity *= 0.995f;
         }
-        //if (Input.GetKey(KeyCode.Space))
-        //{
-        //    velocity *= 0f;
-        //}
+
+        if (inputs.Contains(KeyCode.Q))
+        {
+            Shoot();
+        }
         #endregion
 
         foreach (GravitySource source in externalForces)
@@ -100,6 +102,16 @@ public class Spaceship : GamePiece
         inputs.Clear();
     }
 
+    public void Shoot()
+    {
+        Bullet proj = Instantiate(GameManager.Main.bulletPrefab).GetComponent<Bullet>();
+        proj.location = nose;
+        proj.source = this;
+        proj.rotation = rotation;
+        proj.pieceColor = pieceColor;
+        proj.dead = false;
+    }
+
     void DrawShip()
     {
         Glint.AddCommand(new Line(nose, tailLeft, pieceColor));
@@ -110,12 +122,22 @@ public class Spaceship : GamePiece
 
     public override void CollideWith(GamePiece piece)
     {
+        if (piece.GetType() == typeof(Bullet))
+        {
+            if ((piece as Bullet).source == this) { return; }
+            else
+            {
+                dead = true;
+                GameManager.Main.PlayerScored((piece as Bullet).source);
+                return;
+            }
+        }
         if(piece.GetType() != typeof(Spaceship))
         {
             dead = true;
-            base.CollideWith(piece);
+            //base.CollideWith(piece);
 
-            GameManager.Main.DestroyGamePiece(this);
+            GameManager.Main.PlayerWipeout(this);
         }
         
     }

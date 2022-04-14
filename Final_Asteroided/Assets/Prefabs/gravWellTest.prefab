@@ -43,6 +43,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6f10a24078275b34fa40fed944ffbd48, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  health: 5
   hitboxSize: 0
   location: {x: 0, y: 0, z: 0}
   pieceColor: {r: 0.8584906, g: 0, b: 0.7011006, a: 1}
@@ -55,5 +56,5 @@ MonoBehaviour:
   acceleration: {x: 0, y: 0, z: 0}
   dead: 0
   externalForces: []
-  gravityStrength: 50000
-  gravityRadius: 300
+  gravityStrength: 20000
+  gravityRadius: 150

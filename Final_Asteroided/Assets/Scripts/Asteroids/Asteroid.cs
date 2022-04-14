@@ -2,13 +2,22 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AsteroidTest : GamePiece
+public class Asteroid : GamePiece
 {
     
+
+    public float invincibilityTimer = 0.05f;
+
+    public float timerCount = 0f;
+
+    public bool invuln = false;
+
     protected override void Awake()
     {
         base.Awake();
         rotation = Random.Range(0f, 359f);
+
+        speed = Random.Range(5f, 11f);
     }
 
     protected override void Update()
@@ -34,5 +43,28 @@ public class AsteroidTest : GamePiece
         else if (location.y > Screen.height) { location = new Vector3(location.x, 0); }
 
         DrawingTools.DrawCircle(location, hitboxSize, 16, pieceColor);
+
+        if (invuln) { HitRecovery(); }
+    }
+
+    public override void CollideWith(GamePiece piece)
+    {
+        //base.CollideWith(piece);
+        if (invuln) { return; }
+        health -= 1;
+        if(health <= 0)
+        {
+            GameManager.Main.DestroyGamePiece(this);
+        }
+    }
+
+    void HitRecovery()
+    {
+        timerCount += Time.deltaTime;
+        if(timerCount >= invincibilityTimer)
+        {
+            invuln = false;
+            timerCount = 0;
+        }
     }
 }

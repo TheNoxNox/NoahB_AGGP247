@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class GamePiece : MonoBehaviour
 {
+    public int health = 5;
+
     public float hitboxSize;
 
     public Vector3 location;
@@ -80,13 +82,13 @@ public class GamePiece : MonoBehaviour
     }
 
     // https://gamedevelopment.tutsplus.com/tutorials/when-worlds-collide-simulating-circle-circle-collisions--gamedev-769
-    private void FixedUpdate()
+    protected virtual void FixedUpdate()
     {
         if (dead) { return; }
         foreach (GamePiece otherPiece in GameManager.Main.gamePieces)
         {
             if (dead) return;
-            if (otherPiece != this)
+            if (otherPiece != this && otherPiece.GetType() != typeof(GravitySource))
             {
 
                 if (location.x + hitboxSize + otherPiece.hitboxSize > otherPiece.location.x
@@ -96,6 +98,7 @@ public class GamePiece : MonoBehaviour
                 {
                     //Is colliding with other piece
 
+                    //otherPiece.CollideWith(this);
                     this.CollideWith(otherPiece);
                     return;
                 }

@@ -32,12 +32,17 @@ public class GravitySource : GamePiece
                     
                     if (!otherPiece.externalForces.Contains(this))
                     {
-                        Debug.Log("Adding grav force to " + otherPiece.gameObject.name);
+                        //Debug.Log("Adding grav force to " + otherPiece.gameObject.name);
                         otherPiece.externalForces.Add(this);
                     }
 
                 }
             }
         }
+    }
+
+    public override void CollideWith(GamePiece piece)
+    {
+        //base.CollideWith(piece);
     }
 }
