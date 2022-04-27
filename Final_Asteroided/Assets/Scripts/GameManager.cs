@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -23,9 +24,9 @@ public class GameManager : MonoBehaviour
 
     public GameObject spaceShipPrefab;
 
-    public GameObject asteroidTestPref;
-
-    public List<GameObject> asteroidPrefabs = new List<GameObject>();
+    public int initialAsteroidCount = 10;
+    public GameObject asteroidPrefab;
+    public List<Color> asteroidColors = new List<Color>();
 
     List<StarTwinkle> stars = new List<StarTwinkle>();
 
@@ -45,6 +46,8 @@ public class GameManager : MonoBehaviour
     public TMP_Text blueScoreText;
     public TMP_Text roundCounter;
     public TMP_Text roundStartText;
+    public GameObject gameOverScreen;
+    public TMP_Text playerWinText;
 
     #endregion
 
@@ -68,7 +71,7 @@ public class GameManager : MonoBehaviour
             SpawnPlayerShip(i);
         }   
 
-        //Instantiate(asteroidTestPref).GetComponent<GamePiece>().location = screenCenter + new Vector3(-100, -300);
+        
 
         Instantiate(gravWellTest).GetComponent<GravitySource>().location = screenCenter;
 
@@ -119,7 +122,26 @@ public class GameManager : MonoBehaviour
 
     public void SpawnAsteroid()
     {
+        int coinFlip = Random.Range(0, 2);
+        float xCoord = 0;
+        float yCoord = 0;
 
+        if(coinFlip == 0)
+        {
+            xCoord = Random.Range(0, Screen.width);
+            yCoord = (Random.Range(0, 2) == 0) ? 0 : Screen.height;
+        }
+        else
+        {
+            yCoord = Random.Range(0, Screen.height);
+            xCoord = (Random.Range(0, 2) == 0) ? 0 : Screen.width;
+        }
+
+        Asteroid spawned = Instantiate(asteroidPrefab).GetComponent<Asteroid>();
+        spawned.location = new Vector3(xCoord, yCoord);
+        spawned.pieceColor = asteroidColors[Random.Range(0, asteroidColors.Count)];
+        spawned.hitboxSize = Random.Range(15, 45);
+        spawned.health = (int)(spawned.hitboxSize / 15);
     }
 
     public void Cleanup()
@@ -156,6 +178,18 @@ public class GameManager : MonoBehaviour
             DestroyGamePiece(player);
         }
 
+        foreach(Spaceship player in players)
+        {
+            if(player.score >= 5)
+            {
+                EndGame(player, true);
+            }
+            else if(player.score <= -5)
+            {
+                EndGame(player, false);
+            }
+        }
+
         StartRound();
     }
 
@@ -171,6 +205,23 @@ public class GameManager : MonoBehaviour
         yield return new WaitForSeconds(1.2f);
         allowInput = true;
         roundStartText.enabled = false;
+        for(int i = 0; i < initialAsteroidCount; i++)
+        {
+            SpawnAsteroid();
+        }
+    }
+
+    public void EndGame(Spaceship player, bool didWin)
+    {
+        gameOverScreen.SetActive(true);
+        if (didWin)
+        {
+            playerWinText.text = "GAME OVER\n" + "PLAYER " + player.playerNum + " WINS";
+        }
+        else
+        {
+            playerWinText.text = "GAME OVER\n" + "PLAYER " + (player.playerNum == 0 ? 1 : 0) + " WINS";
+        }
     }
 
     public void PlayerInput()
@@ -217,5 +268,10 @@ public class GameManager : MonoBehaviour
         {
             players[1].inputs.Add(KeyCode.Q);
         }
+    }
+
+    public void BackToMenu()
+    {
+        SceneManager.LoadScene("MainMenu");
     }
 }

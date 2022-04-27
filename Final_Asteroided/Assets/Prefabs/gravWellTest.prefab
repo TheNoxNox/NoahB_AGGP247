@@ -56,5 +56,5 @@ MonoBehaviour:
   acceleration: {x: 0, y: 0, z: 0}
   dead: 0
   externalForces: []
-  gravityStrength: 20000
-  gravityRadius: 150
+  gravityStrength: 30000
+  gravityRadius: 200

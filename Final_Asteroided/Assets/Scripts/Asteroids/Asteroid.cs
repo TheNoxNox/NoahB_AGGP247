@@ -42,7 +42,7 @@ public class Asteroid : GamePiece
         if (location.y < 0) { location = new Vector3(location.x, Screen.height); }
         else if (location.y > Screen.height) { location = new Vector3(location.x, 0); }
 
-        DrawingTools.DrawCircle(location, hitboxSize, 16, pieceColor);
+        DrawingTools.DrawCircle(location, hitboxSize, 10, pieceColor);
 
         if (invuln) { HitRecovery(); }
     }
