@@ -228,6 +228,8 @@ public class GameManager : MonoBehaviour
 
     public void PlayerInput()
     {
+        if (Input.GetKeyDown(KeyCode.Escape)) { SceneManager.LoadScene("MainMenu"); }
+
         if (Input.GetKey(KeyCode.A))
         {
             players[0].inputs.Add(KeyCode.A);
