@@ -183,10 +183,12 @@ public class GameManager : MonoBehaviour
             if(player.score >= 5)
             {
                 EndGame(player, true);
+                return;
             }
             else if(player.score <= -5)
             {
                 EndGame(player, false);
+                return;
             }
         }
 
@@ -216,11 +218,11 @@ public class GameManager : MonoBehaviour
         gameOverScreen.SetActive(true);
         if (didWin)
         {
-            playerWinText.text = "GAME OVER\n" + "PLAYER " + player.playerNum + " WINS";
+            playerWinText.text = "GAME OVER\n" + "PLAYER " + (player.playerNum + 1) + " WINS";
         }
         else
         {
-            playerWinText.text = "GAME OVER\n" + "PLAYER " + (player.playerNum == 0 ? 1 : 0) + " WINS";
+            playerWinText.text = "GAME OVER\n" + "PLAYER " + ((player.playerNum == 0 ? 1 : 0) + 1) + " WINS";
         }
     }
 
