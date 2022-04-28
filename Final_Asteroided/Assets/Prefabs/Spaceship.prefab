@@ -43,17 +43,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2625803703d1aae48a528dc4880742e8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  health: 5
   hitboxSize: 24
   location: {x: 0, y: 0, z: 0}
   pieceColor: {r: 0.8679245, g: 0.118725546, b: 0.118725546, a: 1}
   mass: 50
   rotation: 90
-  speed: 150
+  speed: 250
   force: {x: 0, y: 0, z: 0}
-  maxVelocity: 150
+  maxVelocity: 1000
   velocity: {x: 0, y: 0, z: 0}
   acceleration: {x: 0, y: 0, z: 0}
   dead: 0
   externalForces: []
   inputs: 
+  score: 0
   playerNum: 0

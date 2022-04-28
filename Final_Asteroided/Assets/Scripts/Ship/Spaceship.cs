@@ -31,11 +31,11 @@ public class Spaceship : GamePiece
 
         if (inputs.Contains(KeyCode.A))
         {
-            rotation += 0.1f;
+            rotation += 2f;
         }
         if (inputs.Contains(KeyCode.D))
         {
-            rotation -= 0.1f;
+            rotation -= 2f;
         }
 
         
@@ -46,7 +46,7 @@ public class Spaceship : GamePiece
         }
         else if (inputs.Contains(KeyCode.S))
         {
-            velocity *= 0.995f;
+            velocity *= 0.85f;
         }
 
         if (inputs.Contains(KeyCode.Q))
@@ -83,6 +83,7 @@ public class Spaceship : GamePiece
         {
             this.velocity += acceleration * Time.deltaTime;
         }
+        
 
         this.location += velocity;
 
