@@ -46,7 +46,7 @@ public class Spaceship : GamePiece
         }
         else if (inputs.Contains(KeyCode.S))
         {
-            velocity *= 0.85f;
+            velocity *= 0.989f;
         }
 
         if (inputs.Contains(KeyCode.Q))
